@@ -20,24 +20,20 @@ public class SaveFile {
 	// to run: java accessToken
 	public static void main(String[] args) throws Exception {
 		DbxRequestConfig config = new DbxRequestConfig("joel.patrick.llosa", Locale.getDefault().toString());
-        DbxClientV2 dbxClient = new DbxClientV2(config, args[0]);
-        
-        FileInputStream is = new FileInputStream("howToSave.txt");
-        int size = is.available();
-        String sessionId = dbxClient.files().uploadSessionStart().uploadAndFinish(is)
-                .getSessionId();
+		DbxClientV2 dbxClient = new DbxClientV2(config, args[0]);
 
-        UploadSessionCursor cursor = new UploadSessionCursor(sessionId, (long) size);
-        
-        CommitInfo commitInfo = CommitInfo.newBuilder("/howToSave.txt")
-                .withMode(WriteMode.ADD)
-                .build();
-        FileMetadata metadata = dbxClient.files().uploadSessionFinish(cursor, commitInfo)
-                .finish();
-        if (metadata == null) {
-            System.out.println("file not saved...");
-        } else {
-        	System.out.println("file saved...");
-        }
+		FileInputStream is = new FileInputStream("howToSave.txt");
+		int size = is.available();
+		String sessionId = dbxClient.files().uploadSessionStart().uploadAndFinish(is).getSessionId();
+
+		UploadSessionCursor cursor = new UploadSessionCursor(sessionId, (long) size);
+
+		CommitInfo commitInfo = CommitInfo.newBuilder("/howToSave.txt").withMode(WriteMode.ADD).build();
+		FileMetadata metadata = dbxClient.files().uploadSessionFinish(cursor, commitInfo).finish();
+		if (metadata == null) {
+			System.out.println("file not saved...");
+		} else {
+			System.out.println("file saved...");
+		}
 	}
 }
